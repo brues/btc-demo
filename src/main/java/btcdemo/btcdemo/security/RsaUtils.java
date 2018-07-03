@@ -4,6 +4,7 @@ import javax.crypto.Cipher;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.HashMap;
@@ -30,10 +31,10 @@ public class RsaUtils {
      */
     private static final int KEY_SIZE = 512;
     //公钥
-    private static final String PUBLIC_KEY = "RSAPublicKey";
+    public static final String PUBLIC_KEY = "RSAPublicKey";
 
     //私钥
-    private static final String PRIVATE_KEY = "RSAPrivateKey";
+    public static final String PRIVATE_KEY = "RSAPrivateKey";
 
     /**
      * 初始化密钥对
@@ -162,6 +163,43 @@ public class RsaUtils {
     public static byte[] getPublicKey(Map<String, Object> keyMap) throws Exception {
         Key key = (Key) keyMap.get(PUBLIC_KEY);
         return key.getEncoded();
+    }
+
+
+    /**
+     * 还原公钥，X509EncodedKeySpec 用于构建公钥的规范
+     *
+     * @param keyBytes
+     * @return
+     */
+    public static PublicKey restorePublicKey(byte[] keyBytes) {
+        X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(keyBytes);
+        try {
+            KeyFactory factory = KeyFactory.getInstance(KEY_ALGORITHM);
+            PublicKey publicKey = factory.generatePublic(x509EncodedKeySpec);
+            return publicKey;
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 还原私钥，PKCS8EncodedKeySpec 用于构建私钥的规范
+     *
+     * @param keyBytes
+     * @return
+     */
+    public static PrivateKey restorePrivateKey(byte[] keyBytes) {
+        PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(keyBytes);
+        try {
+            KeyFactory factory = KeyFactory.getInstance(KEY_ALGORITHM);
+            PrivateKey privateKey = factory.generatePrivate(pkcs8EncodedKeySpec);
+            return privateKey;
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
