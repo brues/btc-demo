@@ -25,8 +25,8 @@ public class SignatureUtils {
      * 1. 实例化，传入算法
      * 2. 初始化，传入私钥
      * 3. 签名
-     * @param privateKey
-     * @param plainText
+     * @param privateKey  私钥
+     * @param plainText  原文
      * @return
      */
     public static byte[] sign(PrivateKey privateKey, byte[] plainText) {
@@ -50,9 +50,9 @@ public class SignatureUtils {
      * 1. 实例化，传入算法
      * 2. 初始化，传入公钥
      * 3. 验签
-     * @param publicKey
-     * @param signatureVerify
-     * @param plainText
+     * @param publicKey  公钥
+     * @param signatureVerify 原文签名后的内容
+     * @param plainText  解密后的内容
      * @return
      */
     public static boolean verify(PublicKey publicKey, byte[] signatureVerify, byte[] plainText ) {
