@@ -15,11 +15,10 @@ import java.security.SignatureException;
 public class SignatureUtils {
 
 
-    /** 数字签名算法。JDK只提供了MD2withRSA, MD5withRSA, SHA1withRSA，其他的算法需要第三方包才能支持 */
+    /**
+     * 数字签名算法。JDK只提供了MD2withRSA, MD5withRSA, SHA1withRSA，其他的算法需要第三方包才能支持
+     **/
     public static final String SIGNATURE_ALGORITHM = "SHA1withRSA";
-
-    public static final String PLAIN_TEXT = "MANUTD is the greatest club in the world";
-
 
     /**
      * 签名，三步走
