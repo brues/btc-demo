@@ -27,6 +27,10 @@ public class RsaUtilsTest {
         Map<String, Object> keyMap = RsaUtils.initKey();
         byte[] publicKey = RsaUtils.getPublicKey(keyMap);
         byte[] privateKey = RsaUtils.getPrivateKey(keyMap);
+        System.out.println("公钥：");
+        System.out.println(new String(publicKey));
+        System.out.println("私钥：");
+        System.out.println(new String(privateKey));
         System.out.println();
         System.out.println("===== RSA initKey end =====");
         System.out.println();
