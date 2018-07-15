@@ -22,6 +22,7 @@ public class WalletTest {
         System.out.println("wallet test begin");
         Wallet wallet = Wallet.generateWallet();
         System.out.println(wallet.getAddress());
+        System.out.println(wallet.getHashPubKey());
         System.out.println("wallet test end");
         System.out.println();
         System.out.println();

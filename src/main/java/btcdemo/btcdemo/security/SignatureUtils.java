@@ -1,11 +1,8 @@
 package btcdemo.btcdemo.security;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Signature;
-import java.security.SignatureException;
+import java.security.*;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 
 /**
  * 数字签名
@@ -14,35 +11,43 @@ import java.security.SignatureException;
  */
 public class SignatureUtils {
 
+    public static final String KEY_ALGORITHM = "RSA";
 
     /**
      * 数字签名算法。JDK只提供了MD2withRSA, MD5withRSA, SHA1withRSA，其他的算法需要第三方包才能支持
      **/
-    public static final String SIGNATURE_ALGORITHM = "SHA1withRSA";
+    public static final String SIGNATURE_ALGORITHM = "MD5withRSA";
 
     /**
-     * 签名，三步走
-     * 1. 实例化，传入算法
-     * 2. 初始化，传入私钥
-     * 3. 签名
-     * @param privateKey  私钥
-     * @param plainText  原文
+     * 用私钥对信息生成数字签名
+     *
+     * @param data
+     *            加密数据
+     * @param privateKey
+     *            私钥
+     *
      * @return
+     * @throws Exception
      */
-    public static byte[] sign(PrivateKey privateKey, byte[] plainText) {
-        try {
-            //实例化
-            Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
-            //初始化，传入私钥
-            signature.initSign(privateKey);
-            //更新
-            signature.update(plainText);
-            //签名
-            return signature.sign();
-        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static String sign(byte[] data, String privateKey) throws Exception {
+        // 解密由base64编码的私钥
+        byte[] keyBytes = Base64Utils.fromBase64(privateKey);
+
+        // 构造PKCS8EncodedKeySpec对象
+        PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(keyBytes);
+
+        // KEY_ALGORITHM 指定的加密算法
+        KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
+
+        // 取私钥匙对象
+        PrivateKey priKey = keyFactory.generatePrivate(pkcs8KeySpec);
+
+        // 用私钥对信息生成数字签名
+        Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
+        signature.initSign(priKey);
+        signature.update(data);
+
+        return Base64Utils.toBase64(signature.sign());
     }
 
     /**
@@ -50,25 +55,33 @@ public class SignatureUtils {
      * 1. 实例化，传入算法
      * 2. 初始化，传入公钥
      * 3. 验签
-     * @param publicKey  公钥
-     * @param signatureVerify 原文签名后的内容
-     * @param plainText  解密后的内容
+     * @param data
+     *            加密数据
+     * @param publicKey
+     *            公钥
+     * @param sign
+     *            数字签名
      * @return
      */
-    public static boolean verify(PublicKey publicKey, byte[] signatureVerify, byte[] plainText ) {
-        try {
-            //实例化
-            Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
-            //初始化
-            signature.initVerify(publicKey);
-            //更新
-            signature.update(plainText);
-            //验签
-            return signature.verify(signatureVerify);
-        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean verify(byte[] data, String publicKey, String sign) throws Exception {
+        // 解密由base64编码的公钥
+        byte[] keyBytes = Base64Utils.fromBase64(publicKey);
+
+        // 构造X509EncodedKeySpec对象
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
+
+        // KEY_ALGORITHM 指定的加密算法
+        KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
+
+        // 取公钥匙对象
+        PublicKey pubKey = keyFactory.generatePublic(keySpec);
+
+        Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
+        signature.initVerify(pubKey);
+        signature.update(data);
+
+        // 验证签名是否正常
+        return signature.verify(Base64Utils.fromBase64(sign));
     }
 
 }

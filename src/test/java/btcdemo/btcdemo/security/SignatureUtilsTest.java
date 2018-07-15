@@ -65,7 +65,8 @@ public class SignatureUtilsTest {
          * 用自己A的私钥进行签名
          */
         byte[] encodedText = RsaUtils.encryptByPublicKey(text.getBytes(), rsaPublicKey.getEncoded());
-        byte[] signature = SignatureUtils.sign(signPrivateKey, text.getBytes());
+        String base64SignPriviteKey = Base64Utils.toBase64(signPrivateKey.getEncoded());
+        String signature = SignatureUtils.sign(text.getBytes(),base64SignPriviteKey);
 
 
 
@@ -75,7 +76,8 @@ public class SignatureUtilsTest {
          * 将明文和A的公钥进行验签操作
          */
         byte[] decodedText = RsaUtils.decryptByPrivateKey( encodedText, rsaPrivateKey.getEncoded());
-        boolean signBoolean = SignatureUtils.verify(signPublicKey, signature, decodedText);
+        String base64SignPublicKey = Base64Utils.toBase64(signPublicKey.getEncoded());
+        boolean signBoolean = SignatureUtils.verify(decodedText, base64SignPublicKey, signature);
 
         System.out.println("加密前： "+text);
         System.out.println("解密后:  " + new String(decodedText));
