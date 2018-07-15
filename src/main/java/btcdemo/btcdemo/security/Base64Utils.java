@@ -1,7 +1,7 @@
 package btcdemo.btcdemo.security;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 /**
  * base64工具
@@ -16,8 +16,8 @@ public class Base64Utils {
      * @param before
      * @return
      */
-    public static String toBase64(String before){
-        return Base64.getEncoder().encodeToString(before.getBytes(StandardCharsets.UTF_8));
+    public static String toBase64(byte[] before){
+        return (new BASE64Encoder()).encodeBuffer(before);
     }
 
     /**
@@ -25,7 +25,7 @@ public class Base64Utils {
      * @param base64
      * @return
      */
-    public static String fromBase64(String base64){
-        return new String(Base64.getDecoder().decode(base64),StandardCharsets.UTF_8);
+    public static byte[] fromBase64(String base64) throws Exception {
+        return (new BASE64Decoder()).decodeBuffer(base64);
     }
 }

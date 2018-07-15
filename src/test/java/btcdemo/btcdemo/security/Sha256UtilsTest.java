@@ -20,9 +20,7 @@ public class Sha256UtilsTest {
     public void testSha256(){
         System.out.println();
         System.out.println("===== sha256 begin =====");
-        System.out.println();
         System.out.println(Sha256Utils.sha256("sha256"));
-        System.out.println();
         System.out.println("===== sha256 end =====");
         System.out.println();
     }

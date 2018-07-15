@@ -1,11 +1,14 @@
 package btcdemo.btcdemo.security;
 
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 
 
@@ -18,22 +21,17 @@ import java.util.Map;
 @SpringBootTest
 public class RsaUtilsTest {
 
+    private String publicKey;
+    private String privateKey;
 
-    @Test
-    public void testInitKey() throws Exception {
-        System.out.println();
-        System.out.println("===== RSA initKey begin =====");
-        System.out.println();
+
+    @Before
+    public void setUp() throws Exception {
         Map<String, Object> keyMap = RsaUtils.initKey();
-        byte[] publicKey = RsaUtils.getPublicKey(keyMap);
-        byte[] privateKey = RsaUtils.getPrivateKey(keyMap);
-        System.out.println("公钥：");
-        System.out.println(new String(publicKey));
-        System.out.println("私钥：");
-        System.out.println(new String(privateKey));
-        System.out.println();
-        System.out.println("===== RSA initKey end =====");
-        System.out.println();
+        publicKey = RsaUtils.getPublicKey(keyMap);
+        privateKey = RsaUtils.getPrivateKey(keyMap);
+        System.err.println("公钥: \n\r" + publicKey);
+        System.err.println("私钥： \n\r" + privateKey);
     }
 
 
@@ -44,14 +42,14 @@ public class RsaUtilsTest {
         System.out.println();
         Map<String, Object> keyMap = RsaUtils.initKey();
         //公钥
-        byte[] publicKey = RsaUtils.getPublicKey(keyMap);
+        RSAPublicKey publicKey = (RSAPublicKey) keyMap.get(RsaUtils.PUBLIC_KEY);
         //私钥
-        byte[] privateKey = RsaUtils.getPrivateKey(keyMap);
+        RSAPrivateKey privateKey = (RSAPrivateKey) keyMap.get(RsaUtils.PRIVATE_KEY);
 
         String string = "hello";
         System.out.println("加密前： "+string);
-        byte[] after = RsaUtils.encryptByPrivateKey(string.getBytes(), privateKey);
-        byte[] before = RsaUtils.decryptByPublicKey(after, publicKey);
+        byte[] after = RsaUtils.encryptByPrivateKey(string.getBytes(), privateKey.getEncoded());
+        byte[] before = RsaUtils.decryptByPublicKey(after, publicKey.getEncoded());
         System.out.println("解密后： "+new String(before));
         System.out.println();
         System.out.println("===== RSA private-public end =====");
@@ -66,13 +64,15 @@ public class RsaUtilsTest {
         System.out.println("===== RSA public-private begin =====");
         System.out.println();
         Map<String, Object> keyMap = RsaUtils.initKey();
-        byte[] publicKey = RsaUtils.getPublicKey(keyMap);
-        byte[] privateKey = RsaUtils.getPrivateKey(keyMap);
+        //公钥
+        RSAPublicKey publicKey = (RSAPublicKey) keyMap.get(RsaUtils.PUBLIC_KEY);
+        //私钥
+        RSAPrivateKey privateKey = (RSAPrivateKey) keyMap.get(RsaUtils.PRIVATE_KEY);
 
         String string = "hello";
         System.out.println("加密前： "+string);
-        byte[] after = RsaUtils.encryptByPublicKey(string.getBytes(), publicKey);
-        byte[] before = RsaUtils.decryptByPrivateKey(after, privateKey);
+        byte[] after = RsaUtils.encryptByPublicKey(string.getBytes(), publicKey.getEncoded());
+        byte[] before = RsaUtils.decryptByPrivateKey(after, privateKey.getEncoded());
         System.out.println("解密后： "+new String(before));
         System.out.println();
         System.out.println("===== RSA public-private end =====");

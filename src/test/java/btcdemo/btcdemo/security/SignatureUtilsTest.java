@@ -1,6 +1,7 @@
 package btcdemo.btcdemo.security;
 
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,6 +9,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 
 /**
@@ -19,6 +22,19 @@ import java.util.Map;
 @SpringBootTest
 public class SignatureUtilsTest {
 
+    private String publicKey;
+    private String privateKey;
+
+
+    @Before
+    public void setUp() throws Exception {
+        Map<String, Object> keyMap = RsaUtils.initKey();
+        privateKey = RsaUtils.getPrivateKey(keyMap);
+        publicKey = RsaUtils.getPublicKey(keyMap);
+        System.err.println("公钥: \n\r" + publicKey);
+        System.err.println("私钥： \n\r" + privateKey);
+    }
+
 
     @Test
     public void testSign() throws Exception {
@@ -28,12 +44,17 @@ public class SignatureUtilsTest {
 
         //建立两套公私钥对
         Map<String, Object> rsaMap = RsaUtils.initKey();
-        byte[] rsaPublicKey = RsaUtils.getPublicKey(rsaMap);
-        byte[] rsaPrivateKey = RsaUtils.getPrivateKey(rsaMap);
+        //公钥
+        RSAPublicKey rsaPublicKey = (RSAPublicKey) rsaMap.get(RsaUtils.PUBLIC_KEY);
+        //私钥
+        RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) rsaMap.get(RsaUtils.PRIVATE_KEY);
+
 
         Map<String, Object> signMap = RsaUtils.initKey();
-        PublicKey signPublicKey = RsaUtils.restorePublicKey((RsaUtils.getPublicKey(signMap)));
-        PrivateKey signPrivateKey = RsaUtils.restorePrivateKey(RsaUtils.getPrivateKey(signMap));
+        //公钥
+        RSAPublicKey signPublicKey = (RSAPublicKey) signMap.get(RsaUtils.PUBLIC_KEY);
+        //私钥
+        RSAPrivateKey signPrivateKey = (RSAPrivateKey) signMap.get(RsaUtils.PRIVATE_KEY);
 
 
         String text = "hello";
@@ -43,7 +64,7 @@ public class SignatureUtilsTest {
          * A用B的公钥进行加密
          * 用自己A的私钥进行签名
          */
-        byte[] encodedText = RsaUtils.encryptByPublicKey(text.getBytes(), rsaPublicKey);
+        byte[] encodedText = RsaUtils.encryptByPublicKey(text.getBytes(), rsaPublicKey.getEncoded());
         byte[] signature = SignatureUtils.sign(signPrivateKey, text.getBytes());
 
 
@@ -53,7 +74,7 @@ public class SignatureUtilsTest {
          * 用B的私钥解密得到明文
          * 将明文和A的公钥进行验签操作
          */
-        byte[] decodedText = RsaUtils.decryptByPrivateKey( encodedText, rsaPrivateKey);
+        byte[] decodedText = RsaUtils.decryptByPrivateKey( encodedText, rsaPrivateKey.getEncoded());
         boolean signBoolean = SignatureUtils.verify(signPublicKey, signature, decodedText);
 
         System.out.println("加密前： "+text);

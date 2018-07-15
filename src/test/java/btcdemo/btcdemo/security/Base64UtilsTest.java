@@ -19,20 +19,20 @@ public class Base64UtilsTest {
     public void testToBase64(){
         System.out.println();
         System.out.println("===== toBase64 begin =====");
-        System.out.println();
-        System.out.println(Base64Utils.toBase64("base64"));
-        System.out.println();
+        String before = "base64";
+        System.out.println(Base64Utils.toBase64(before.getBytes()));
         System.out.println("===== toBase64 end =====");
         System.out.println();
     }
 
     @Test
-    public void testFromBase64(){
+    public void testFromBase64() throws Exception {
         System.out.println();
         System.out.println("===== fromBase64 begin =====");
-        System.out.println();
-        System.out.println(Base64Utils.fromBase64(Base64Utils.toBase64("base64")));
-        System.out.println();
+        String before = "base64";
+        String after = Base64Utils.toBase64(before.getBytes());
+        String afterToBefore = new String(Base64Utils.fromBase64(after));
+        System.out.println(afterToBefore);
         System.out.println("===== fromBase64 end =====");
         System.out.println();
     }

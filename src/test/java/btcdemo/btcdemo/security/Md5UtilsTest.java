@@ -6,6 +6,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.UnsupportedEncodingException;
+
 
 /**
  * md5算法测试
@@ -20,9 +22,9 @@ public class Md5UtilsTest {
     public void testMd5() {
         System.out.println();
         System.out.println("===== md5 begin =====");
-        System.out.println();
-        System.out.println(Md5Utils.md5("MD5"));
-        System.out.println();
+        String before = "hello";
+        String after = ByteArrayToStringUtils.byteArrayToString(Md5Utils.md5(before.getBytes()));
+        System.out.println(after);
         System.out.println("===== md5 end =====");
         System.out.println();
     }

@@ -20,7 +20,7 @@ public class Base58UtilsTest {
         System.out.println();
         System.out.println("===== toBase58 begin =====");
         System.out.println();
-        System.out.println(Base58Utils.toBase58("base58"));
+        System.out.println(Base58Utils.toBase58("base582323423424234234234234234".getBytes()));
         System.out.println();
         System.out.println("===== toBase58 end =====");
         System.out.println();
@@ -31,7 +31,7 @@ public class Base58UtilsTest {
         System.out.println();
         System.out.println("===== fromBase58 begin =====");
         System.out.println();
-        System.out.println(Base58Utils.fromBase58(Base58Utils.toBase58("base58")));
+        System.out.println(new String(Base58Utils.fromBase58(Base58Utils.toBase58("base58".getBytes()))));
         System.out.println();
         System.out.println("===== fromBase58 end =====");
         System.out.println();

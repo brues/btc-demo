@@ -143,26 +143,34 @@ public class RsaUtils {
 
 
 
+
+
+
+
+
+
     /**
      * 取得私钥
      *
-     * @param keyMap 密钥map
-     * @return byte[] 私钥
+     * @param keyMap
+     * @return
+     * @throws Exception
      */
-    public static byte[] getPrivateKey(Map<String, Object> keyMap) {
+    public static String getPrivateKey(Map<String, Object> keyMap) throws Exception {
         Key key = (Key) keyMap.get(PRIVATE_KEY);
-        return key.getEncoded();
+        return Base64Utils.toBase64(key.getEncoded());
     }
 
     /**
      * 取得公钥
      *
-     * @param keyMap 密钥map
-     * @return byte[] 公钥
+     * @param keyMap
+     * @return
+     * @throws Exception
      */
-    public static byte[] getPublicKey(Map<String, Object> keyMap) throws Exception {
+    public static String getPublicKey(Map<String, Object> keyMap) throws Exception {
         Key key = (Key) keyMap.get(PUBLIC_KEY);
-        return key.getEncoded();
+        return Base64Utils.toBase64(key.getEncoded());
     }
 
 

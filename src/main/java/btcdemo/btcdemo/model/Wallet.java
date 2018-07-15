@@ -79,7 +79,7 @@ public class Wallet {
 	 *
 	 * @return
 	 */
-	public String getAddress() {
+	public String getAddress() throws Exception {
 		return Wallet.getAddress(publicKey);
 	}
 
@@ -89,9 +89,9 @@ public class Wallet {
 	 * @param publicKey
 	 * @return
 	 */
-	public static String getAddress(String publicKey) {
+	public static String getAddress(String publicKey) throws Exception {
 		String publicKeyHash = hashPubKey(publicKey);
-		return Md5Utils.md5(publicKeyHash);
+		return String.valueOf(Md5Utils.md5(publicKeyHash.getBytes()));
 	}
 
 

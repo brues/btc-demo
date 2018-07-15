@@ -16,7 +16,7 @@ public class WalletTest {
 
 
     @Test
-    public void testWallet(){
+    public void testWallet() throws Exception {
         System.out.println();
         System.out.println();
         System.out.println("wallet test begin");

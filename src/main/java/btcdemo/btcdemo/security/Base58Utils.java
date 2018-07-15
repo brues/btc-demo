@@ -1,8 +1,6 @@
 package btcdemo.btcdemo.security;
 
 
-import java.io.UnsupportedEncodingException;
-
 /**
  * base58工具
  *
@@ -24,57 +22,43 @@ public class Base58Utils {
         }
     }
 
-    public static String toBase58(String before) {
-        if (before==null||before.length()<=0){
+    public static String toBase58(byte[] before) {
+        if (before==null||before.length<=0){
             return "";
         }
-        byte[] input = before.getBytes();
-        if (input.length == 0) {
-            return "";
-        }
-
-        input = copyOfRange(input, 0, input.length);
-
+        before = copyOfRange(before, 0, before.length);
         int zeroCount = 0;
-        while (zeroCount < input.length && input[zeroCount] == 0) {
+        while (zeroCount < before.length && before[zeroCount] == 0) {
             ++zeroCount;
         }
-
-        byte[] temp = new byte[input.length * 2];
+        byte[] temp = new byte[before.length * 2];
         int j = temp.length;
-
         int startAt = zeroCount;
-        while (startAt < input.length) {
-            byte mod = divmod58(input, startAt);
-            if (input[startAt] == 0) {
+        while (startAt < before.length) {
+            byte mod = divmod58(before, startAt);
+            if (before[startAt] == 0) {
                 ++startAt;
             }
-
             temp[--j] = (byte) ALPHABET[mod];
         }
-
         while (j < temp.length && temp[j] == ALPHABET[0]) {
             ++j;
         }
-
         while (--zeroCount >= 0) {
             temp[--j] = (byte) ALPHABET[0];
         }
-
         byte[] output = copyOfRange(temp, j, temp.length);
         return new String(output);
     }
 
-    public static String fromBase58(String input) {
+
+    public static byte[] fromBase58(String input) {
         if (input.length() == 0) {
-            return new byte[0].toString();
+            return null;
         }
-
         byte[] input58 = new byte[input.length()];
-
         for (int i = 0; i < input.length(); ++i) {
             char c = input.charAt(i);
-
             int digit58 = -1;
             if (c >= 0 && c < 128) {
                 digit58 = INDEXES[c];
@@ -82,17 +66,12 @@ public class Base58Utils {
             if (digit58 < 0) {
                 throw new RuntimeException("Not a Base58 input: " + input);
             }
-
             input58[i] = (byte) digit58;
         }
-
-
         int zeroCount = 0;
         while (zeroCount < input58.length && input58[zeroCount] == 0) {
             ++zeroCount;
         }
-
-
         byte[] temp = new byte[input.length()];
         int j = temp.length;
 
@@ -105,20 +84,12 @@ public class Base58Utils {
 
             temp[--j] = mod;
         }
-
-
         while (j < temp.length && temp[j] == 0) {
             ++j;
         }
 
         byte[] out = copyOfRange(temp, j - zeroCount, temp.length);
-
-        try {
-            return new String(out,"UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return "";
-        }
+        return out;
     }
 
     private static byte divmod58(byte[] number, int startAt) {
