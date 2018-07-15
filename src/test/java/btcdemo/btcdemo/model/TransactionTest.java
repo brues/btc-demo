@@ -27,6 +27,8 @@ public class TransactionTest {
         System.out.println();
         System.out.println();
         System.out.println();
+        System.out.println(receiver.getPublicKey());
+        System.out.println(receiver.getPrivateKey());
         System.out.println(transaction.coinbaseTx());
         transaction.sign(receiver.getPrivateKey(), transaction);
         System.out.println(transaction.verify(transaction));
