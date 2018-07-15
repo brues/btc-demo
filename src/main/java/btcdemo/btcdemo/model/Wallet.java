@@ -1,5 +1,6 @@
 package btcdemo.btcdemo.model;
 
+import btcdemo.btcdemo.security.ByteArrayToStringUtils;
 import btcdemo.btcdemo.security.Md5Utils;
 import btcdemo.btcdemo.security.RsaUtils;
 import btcdemo.btcdemo.security.Sha256Utils;
@@ -79,7 +80,7 @@ public class Wallet {
 	 *
 	 * @return
 	 */
-	public String getAddress() throws Exception {
+	public String getAddress() {
 		return Wallet.getAddress(publicKey);
 	}
 
@@ -89,9 +90,9 @@ public class Wallet {
 	 * @param publicKey
 	 * @return
 	 */
-	public static String getAddress(String publicKey) throws Exception {
+	public static String getAddress(String publicKey) {
 		String publicKeyHash = hashPubKey(publicKey);
-		return String.valueOf(Md5Utils.md5(publicKeyHash.getBytes()));
+        return ByteArrayToStringUtils.byteArrayToString(Md5Utils.md5(publicKeyHash.getBytes()));
 	}
 
 
@@ -113,5 +114,4 @@ public class Wallet {
     public String getHashPubKey() {
         return Wallet.hashPubKey(publicKey);
     }
-
 }
