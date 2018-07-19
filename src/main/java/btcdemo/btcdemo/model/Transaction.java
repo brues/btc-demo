@@ -13,6 +13,12 @@ import com.alibaba.fastjson.JSON;
 public class Transaction {
 
 	/**
+	 * 挖矿系统默认奖励
+	 */
+	public static final Integer SYSTEM_AWARD = 10;
+
+
+	/**
 	 * 交易唯一标识
 	 */
 	private String id;
