@@ -14,8 +14,6 @@ import java.io.UnsupportedEncodingException;
  *
  * @author blues
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class Md5UtilsTest {
 
     @Test
@@ -23,7 +21,7 @@ public class Md5UtilsTest {
         System.out.println();
         System.out.println("===== md5 begin =====");
         String before = "hello";
-        String after = ByteArrayToStringUtils.byteArrayToString(Md5Utils.md5(before.getBytes()));
+        String after = Md5Utils.md5(before);
         System.out.println(after);
         System.out.println("===== md5 end =====");
         System.out.println();
